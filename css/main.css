@@ -48,7 +48,7 @@ body {
     padding: 1rem;
 }
 
-.add-task__options select {
+.add-task__options{
     width: 100%;
     font-size: 1.6rem;
     padding: 1rem;
@@ -130,6 +130,9 @@ body {
     border-left: 2px solid #044EBE;
 }
 
+.task-done {
+    text-decoration: line-through;
+}
 
 .btn-red {
     height: 100%;
