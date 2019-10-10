@@ -32,6 +32,7 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    font-size: 1.6rem;
 }
 
 .bottom-section {
@@ -58,6 +59,18 @@ body {
     text-align: center;
 }
 
+.task-container {
+    margin: 2rem auto 1rem;
+    width: 60%;
+}
+
+.task-container__heading {
+    text-align: center;
+    padding: 1.5rem;
+    color: #044EBE;
+    border-bottom: 1px solid #044EBE;
+}
+
 .btn {
     border: none;
     outline: none;
@@ -68,4 +81,64 @@ body {
 .btn-blue {
     color: #fff;
     background-color: #044EBE;
+}
+
+
+.task {
+    margin: 2rem auto;
+    height: 5rem;
+    font-size: 2.4rem;
+    width: 70%;
+    display: grid;
+    grid-template-columns: 1fr 3fr 1fr;
+    border-radius: 0 .7rem .7rem 0;
+}
+
+.task-heading {
+    display: inline-block;
+}
+
+.task-details {
+    display: inline-block;
+    padding-left: 1rem;
+}
+
+.task-high {
+    border: 2px solid #c50000;
+    border-left: 4px solid #c50000;
+}
+
+.task-details__high {
+    border-left: 2px solid #c50000;
+}
+
+.task-medium {
+    border: 2px solid #27C500;
+    border-left: 4px solid #27C500;
+}
+
+.task-details__medium {
+    border-left: 2px solid #27C500;
+}
+
+.task-low {
+    border: 2px solid #044EBE;
+    border-left: 4px solid #044EBE;
+}
+
+.task-details__low {
+    border-left: 2px solid #044EBE;
+}
+
+
+.btn-red {
+    height: 100%;
+    background: linear-gradient(to bottom, #d80303, #c50000);
+    color: #fff;
+}
+
+.btn-green {
+    height: 100%;
+    background-color: #27C500;
+    color: #fff;
 }

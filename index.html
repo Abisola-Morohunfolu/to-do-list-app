@@ -4,6 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <link href="https://fonts.googleapis.com/css?family=Lato:300i,400,700i&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="./css/main.css">
         <title>To Do List</title>
     </head>
@@ -24,18 +25,52 @@
                 <div class="add-task">
                     <div class="add-task__options">
                         <select name="priority" id="priority">
-                            <option value="high">High</option>
+                            <option value="high" selected>High</option>
                             <option value="medium">Medium</option>
                             <option value="low">Low</option>
                         </select>
                     </div>
                     <input type="text" name="add-task" id="add-task" placeholder="Add New Task">
                     <button class="btn btn-blue">Add</button>
-                    
-
                 </div>
             </section>
 
+            <section class="task-container">
+                <h2 class="task-container__heading">
+                    All Tasks
+                </h2>
+
+                <div class="task task-high" id="high-0">
+                    <h4 class="task-heading">
+                        High
+                    </h4>
+                    <p class="task-details task-details__high">
+                        Buy Groceries
+                    </p>
+                    <button class="btn btn-red">Done</button>
+                </div>
+
+                <div class="task task-medium" id="medium-0">
+                    <h4 class="task-heading">
+                        Medium
+                    </h4>
+                    <p class="task-details task-details__medium">
+                        Get Haircut
+                    </p>
+                    <button class="btn btn-green">Done</button>
+                </div>
+
+                <div class="task task-low" id="low-0">
+                    <h4 class="task-heading">
+                        Low
+                    </h4>
+                    <p class="task-details task-details__low">
+                        Call Jeremy
+                    </p>
+                    <button class="btn btn-blue">Done</button>
+                </div>
+
+            </section>
         </div>
         <script src="./js/script.js"></script>
     </body>
