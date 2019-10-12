@@ -27,6 +27,15 @@ const toDoListData = (() => {
             //creating and pushing object
             let newTask = new Task(ID, description);
             allTask[type].push(newTask);
+
+            //add to local storage
+            if (localStorage.length > 0) {
+                ID = localStorage.length;
+                localStorage.setItem(ID, newTask);
+            } else {
+                localStorage.setItem(ID, newTask);
+            }
+            
             return newTask;
         },
 
@@ -42,7 +51,8 @@ const UITaskHandler = (() => {
         taskType : '.add-task__options',
         taskDescription: '.add-task__description',
         addTaskButton: '.add-task__button',
-        taskContainer: '.task-container'
+        taskContainer: '.task-container',
+        clearButton: '.btn-clear'
     }
 
     return {
@@ -63,11 +73,20 @@ const UITaskHandler = (() => {
             }
 
             newHtml = html.replace('%id%', obj.id);
-           newHtml = newHtml.replace('%description%', obj.description);
+            newHtml = newHtml.replace('%description%', obj.description);
 
+           localStorage.setItem(type + obj.id, newHtml);
             //inserting element into DOM
             element = document.querySelector(DOMStrings.taskContainer);
             element.insertAdjacentHTML("beforeend", newHtml);
+        },
+
+        addExistingTask: (type) => {
+            let existingItem, element;
+
+            existingItem = localStorage.getItem(type);
+            element = element = document.querySelector(DOMStrings.taskContainer);
+            element.insertAdjacentHTML("beforeend", existingItem);
         },
 
         clearInput: () => {
@@ -83,7 +102,8 @@ const appController = ((dataControl, UIControl) => {
     const DOM = UIControl.getStrings();
     let DOMValues ={
         description: document.querySelector(DOM.taskDescription),
-        type: document.querySelector(DOM.taskType)
+        type: document.querySelector(DOM.taskType),
+        clearBtn: document.querySelector(DOM.clearButton)
     };
 
     const addTask = () => {
@@ -112,6 +132,31 @@ const appController = ((dataControl, UIControl) => {
         }
     });
 
+    document.querySelector(DOM.clearButton).addEventListener('click', () => {
+        if (document.querySelector(DOM.taskContainer).childElementCount > 0) {
+            document.querySelector(DOM.taskContainer).textContent = " ";
+            localStorage.clear();
+        }
+    })
+
+
+
 
 })(toDoListData, UITaskHandler);
 
+function init() {
+    let keyArray = [];
+    if (localStorage != null) {
+        for (let i = 0; i < localStorage.length; i++) {
+            keyArray.push(localStorage.key(i));
+        }
+    
+    for (let key of keyArray) {
+        if (key.includes('high') || key.includes('medium') || key.includes('low')) {
+            UITaskHandler.addExistingTask(key);
+        } 
+    }
+    }
+}
+
+init();
