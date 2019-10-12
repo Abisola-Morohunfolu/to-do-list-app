@@ -63,7 +63,7 @@ const UITaskHandler = (() => {
             }
 
             newHtml = html.replace('%id%', obj.id);
-            newHtml = newHtml.replace('%description%', obj.description);
+           newHtml = newHtml.replace('%description%', obj.description);
 
             //inserting element into DOM
             element = document.querySelector(DOMStrings.taskContainer);
