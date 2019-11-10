@@ -1,3 +1,10 @@
+window.addEventListener('load', () => {
+    const preload = document.querySelector('.load-container');
+    preload.classList.add('load-container_fade');
+})
+
+
+
 //data storage and creation module
 const toDoListData = (() => {
     class Task {
@@ -27,16 +34,14 @@ const toDoListData = (() => {
             //creating and pushing object
             let newTask = new Task(ID, description);
             allTask[type].push(newTask);
-
-            //add to local storage
-            if (localStorage.length > 0) {
-                ID = localStorage.length;
-                localStorage.setItem(ID, newTask);
-            } else {
-                localStorage.setItem(ID, newTask);
-            }
             
             return newTask;
+        },
+
+        addExistingItem: (type, exsitingID) => {
+
+            let existingItem = new Task(exsitingID, description = 'existingItem');
+            allTask[type].push(existingItem);
         },
 
         testing: () => {
@@ -61,31 +66,24 @@ const UITaskHandler = (() => {
         },
 
         displayNewTask: (obj, type) => {
-            let html, newHtml, element;
-
             //content to be inserted unto the page
-            if (type === 'high') {
-                html =  '<div class="task task-high" id="high-%id%"><h4 class="task-heading">High</h4><p class="task-details task-details__high">%description%</p><button class="btn btn-red">Done</button></div>'
-            } else if (type === 'medium') {
-                html = '<div class="task task-medium" id="medium-%id%"><h4 class="task-heading">Medium</h4><p class="task-details task-details__medium">%description%</p><button class="btn btn-green">Done</button></div>'
-            } else if ( type === 'low') {
-                html = '<div class="task task-low" id="low-0"><h4 class="task-heading">Low</h4><p class="task-details task-details__low">%description%</p><button class="btn btn-blue">Done</button></div>'
-            }
+              let markup =  `<div class="task task-${type}" id="${type}-${obj.id}">
+                            <h4 class="task-details task-details__${type}">${obj.description}</h4>
+                            <button type="button" class="btn btn-${type}">Done</button>
+                        </div>`;
 
-            newHtml = html.replace('%id%', obj.id);
-            newHtml = newHtml.replace('%description%', obj.description);
 
-           localStorage.setItem(type + obj.id, newHtml);
+           localStorage.setItem(type + '-' + obj.id, markup);
             //inserting element into DOM
-            element = document.querySelector(DOMStrings.taskContainer);
-            element.insertAdjacentHTML("beforeend", newHtml);
+            let element = document.querySelector(DOMStrings.taskContainer);
+            element.insertAdjacentHTML("beforeend", markup);
         },
 
         addExistingTask: (type) => {
             let existingItem, element;
 
             existingItem = localStorage.getItem(type);
-            element = element = document.querySelector(DOMStrings.taskContainer);
+            element = document.querySelector(DOMStrings.taskContainer);
             element.insertAdjacentHTML("beforeend", existingItem);
         },
 
@@ -114,16 +112,21 @@ const appController = ((dataControl, UIControl) => {
 
             //displaying new task in UI
             UIControl.displayNewTask(newTodo, DOMValues.type.value);
+            
 
              //clearing input fields adding a new element
             UIControl.clearInput();
         }
+    };
 
-    }
 
 
     //adding event listener
     document.querySelector(DOM.addTaskButton).addEventListener('click', addTask);
+    document.querySelector(DOM.taskContainer).addEventListener('click', event => {
+        const e = event.target.id;
+        console.log(e)
+    })
     //adding key press events
     document.addEventListener('keypress', function(event){
     //adding conditional statement to check if enter was pressed
@@ -134,8 +137,8 @@ const appController = ((dataControl, UIControl) => {
 
     document.querySelector(DOM.clearButton).addEventListener('click', () => {
         if (document.querySelector(DOM.taskContainer).childElementCount > 0) {
-            document.querySelector(DOM.taskContainer).textContent = " ";
-            localStorage.clear();
+                document.querySelector(DOM.taskContainer).textContent = " ";
+                localStorage.clear();
         }
     })
 
@@ -144,7 +147,57 @@ const appController = ((dataControl, UIControl) => {
 
 })(toDoListData, UITaskHandler);
 
+
+const headerDisplay = (dayTime, curDay, curMonArr, curMon, year) => {
+    //localStorage.setItem('user', 'Jack');
+    let markup = `
+        <div class="top-section__text">
+            <h1 class="main-heading">
+                Good ${dayTime}, ${localStorage.getItem('user')}
+            </h1>
+            <h3 class="sub-heading">
+                ${curMonArr[curMon - 1]} ${curDay}, ${year}
+            </h3>
+        </div>
+    `;
+
+    document.querySelector('.top-section').insertAdjacentHTML('beforeend', markup);
+};
+
+const dateDisplay = () => {
+    let dayTime;
+
+    const timeOfday = new Date().getHours();
+    const currentDay = new Date().getDate();
+    const currentMonth = new Date().getMonth();
+    const currentYear = new Date().getFullYear();
+
+    const dayTimeArray = ['morning', 'afternoon', 'evening'];
+    const monthArray = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
+
+    if (timeOfday > 0 && timeOfday < 12) {
+        dayTime = dayTimeArray[0]
+    } else if (timeOfday > 12 && timeOfday < 17) {
+        dayTime = dayTimeArray[1];
+    } else {
+        dayTime = dayTimeArray[2];
+    }
+
+    //console.log(currentMonth, monthArray[10]);
+
+    headerDisplay(dayTime, currentDay, monthArray, currentMonth, currentYear);
+};
+
 function init() {
+
+    
+
+    // localStorage.setItem('logged in', 'true');
+    // if (localStorage.getItem('logged in') === 'true') {
+    //     return window.location.replace('https://twitter.com/home');
+    // }
+
+    dateDisplay();
     let keyArray = [];
     if (localStorage != null) {
         for (let i = 0; i < localStorage.length; i++) {
@@ -154,9 +207,15 @@ function init() {
     for (let key of keyArray) {
         if (key.includes('high') || key.includes('medium') || key.includes('low')) {
             UITaskHandler.addExistingTask(key);
-        } 
+            let taskID = key.split('-');
+            let type = taskID[0];
+            let ID = parseFloat(taskID[1]);
+            toDoListData.addExistingItem(type, ID);
+            //console.log(type, ID);
+        }
     }
     }
 }
 
 init();
+

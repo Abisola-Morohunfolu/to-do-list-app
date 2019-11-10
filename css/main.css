@@ -17,6 +17,46 @@ body {
     line-height: 1.7;
 }
 
+.load-container {
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    z-index: 3000;
+    background-color: aqua;
+    width: 100%;
+    transition: all .5s;
+}
+
+.load-container_fade {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.load{
+    position: fixed;
+    top:50%;left:50%;
+    transform:translate(-50%, -50%);
+    /*change these sizes to fit into your project*/
+    width:100px;
+    height:100px;
+    z-index: 3000;
+  }
+  
+.load hr{border:0;margin:0;width:40%;height:40%;position:absolute;border-radius:50%;animation:spin 2s ease infinite}
+  
+  .load :first-child{background:#19A68C;animation-delay:-1.5s}
+  .load :nth-child(2){background:#F63D3A;animation-delay:-1s}
+  .load :nth-child(3){background:#FDA543;animation-delay:-0.5s}
+  .load :last-child{background:#193B48}
+  
+  @keyframes spin{
+    0%,100%{transform:translate(0)}
+    25%{transform:translate(160%)}
+    50%{transform:translate(160%, 160%)}
+    75%{transform:translate(0, 160%)}
+  }
+
 
 /* TOP SECTION STYLES */
 .top-section {
@@ -79,8 +119,10 @@ body {
     outline: none;
     border-radius: 0 .5rem .5rem 0;
     cursor: pointer;
+    flex: 0 0 25%;
 }
 
+.btn-low,
 .btn-blue {
     color: #fff;
     background-color: #044EBE;
@@ -91,18 +133,15 @@ body {
     margin: 2rem auto;
     height: 5rem;
     font-size: 2.4rem;
-    width: 70%;
-    display: grid;
-    grid-template-columns: 1fr 3fr 1fr;
+    display: flex;
+    width: 60%;
     border-radius: 0 .7rem .7rem 0;
 }
 
-.task-heading {
-    display: inline-block;
-}
+
 
 .task-details {
-    display: inline-block;
+    margin-right: auto;
     padding-left: 1rem;
 }
 
@@ -137,13 +176,13 @@ body {
     text-decoration: line-through;
 }
 
-.btn-red {
+.btn-high {
     height: 100%;
     background: linear-gradient(to bottom, #d80303, #c50000);
     color: #fff;
 }
 
-.btn-green {
+.btn-medium {
     height: 100%;
     background-color: #27C500;
     color: #fff;
