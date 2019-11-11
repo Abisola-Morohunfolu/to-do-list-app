@@ -1,5 +1,9 @@
 window.addEventListener('load', () => {
     const preload = document.querySelector('.load-container');
+    const loggedIn = localStorage.getItem('logged-in');
+    if (!localStorage.getItem('user') && !localStorage.getItem('pin') && loggedIn !== 'true') {
+        return window.location.replace('login.html');
+    }
     preload.classList.add('load-container_fade');
 })
 
@@ -43,6 +47,12 @@ const toDoListData = (() => {
             let existingItem = new Task(exsitingID, description = 'existingItem');
             allTask[type].push(existingItem);
         },
+        
+        removeExistingItem: (type, id) => {
+            const itemArray = [...allTask[type]];
+            const newArray = itemArray.filter(item => item.id !== id);
+            allTask[type] = [...newArray];
+        },
 
         testing: () => {
             return allTask;
@@ -77,6 +87,12 @@ const UITaskHandler = (() => {
             //inserting element into DOM
             let element = document.querySelector(DOMStrings.taskContainer);
             element.insertAdjacentHTML("beforeend", markup);
+        },
+
+        removeSingleTask: (taskID) => {
+            let element = document.getElementById(taskID);
+            element.parentElement.removeChild(element);
+            localStorage.removeItem(taskID);
         },
 
         addExistingTask: (type) => {
@@ -123,9 +139,18 @@ const appController = ((dataControl, UIControl) => {
 
     //adding event listener
     document.querySelector(DOM.addTaskButton).addEventListener('click', addTask);
+
     document.querySelector(DOM.taskContainer).addEventListener('click', event => {
-        const e = event.target.id;
-        console.log(e)
+        const itemID = event.target.parentNode.id;
+        const splitID = itemID.split('-');
+
+        const type = splitID[0];
+        const ID = parseFloat(splitID[1]);
+
+        //remove from data structure
+        dataControl.removeExistingItem(type, ID)
+        
+        UIControl.removeSingleTask(itemID);
     })
     //adding key press events
     document.addEventListener('keypress', function(event){
@@ -138,7 +163,19 @@ const appController = ((dataControl, UIControl) => {
     document.querySelector(DOM.clearButton).addEventListener('click', () => {
         if (document.querySelector(DOM.taskContainer).childElementCount > 0) {
                 document.querySelector(DOM.taskContainer).textContent = " ";
-                localStorage.clear();
+
+                //remove item from local storage
+                let keyArray = [];
+                for (let i = 0; i < localStorage.length; i++) {
+                    keyArray.push(localStorage.key(i));
+                }
+
+                for (key of keyArray) {
+                    if (key.includes('high') || key.includes('medium') || key.includes('low')) {
+                        localStorage.removeItem(key);
+                    }
+                }
+                //localStorage.clear();
         }
     })
 
